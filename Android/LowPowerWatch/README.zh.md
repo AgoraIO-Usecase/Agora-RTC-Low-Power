@@ -1,4 +1,4 @@
-# OpenLive for Android
+# LowPowerWatch for Android Watch
 
 *Read this in other languages: [English](README.en.md)*
 
@@ -32,9 +32,9 @@ compile fileTree(dir: 'libs', include: ['*.jar'])
 也可以使用 `Gradle` 直接编译运行。
 
 ##注意事项
-- 针对手表的SDK是我们单独提供的SDK，特殊定制的，可能通用SDK效果没有定制的好
-- 音频采用的G722格式
-- joinchannel 函数对应的频道名，可自行修改 。              当前默认是：mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0);
+- 针对手表的SDK是我们单独提供的SDK，特殊定制的，需要联系我们的商务获取对应的SDK
+- 音频格式需要按照代码中设置的
+- joinchannel 函数对应的频道名，可自行修改 。当前默认是：mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0);
 - 编码分辨率帧率，可定制化修改，对手表端来说，不宜设置太大。  当前默认是：mRtcEngine.setVideoProfile(160, 120, 10, 120);
 
 ## 运行环境

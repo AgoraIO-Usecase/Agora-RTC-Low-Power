@@ -1,8 +1,8 @@
-# OpenLive for Android
+# LowPowerMobile for Android
 
 *Read this in other languages: [English](README.en.md)*
 
-这个开源示例项目演示了手表如何快速集成 Agora 视频 SDK，实现多人视频连麦直播。
+这个开源示例项目演示了手机如何快速集成 Agora 视频 SDK，实现多人视频连麦直播。
 
 在这个示例项目中包含了以下功能：
 
@@ -32,8 +32,7 @@ compile fileTree(dir: 'libs', include: ['*.jar'])
 也可以使用 `Gradle` 直接编译运行。
 
 ##注意事项
-- 针对手表的SDK是我们单独提供的SDK，特殊定制的，可能通用SDK效果没有定制的好
-- 音频采用的G722格式
+- 音频格式需要按照代码中设置的，和手表或者其他IOT设备保持一致
 - joinchannel 函数对应的频道名，可自行修改 。
 - 编码分辨率帧率，可定制化修改，对手表端来说，不宜设置太大。  当前默认是：mRtcEngine.setVideoProfile((160,120,15,120));
 

@@ -1,4 +1,4 @@
-# OpenLive for Android
+# LowPowerWatch for Android Watch
 
 *其他语言版本： [简体中文](README.zh.md)*
 
@@ -32,8 +32,8 @@ Finally, open project with Android Studio, connect your Android device, build an
 Or use `Gradle` to build and run.
 
 ##Matters needing attention
-- The SDK for watches is the SDK that we provide separately, specially customized. Maybe the general SDK effect is not customized.
-- G722 format used for audio
+- The SDK for watches is the SDK we provide separately. It is specially customized. We need to contact our business to get the corresponding SDK.
+- the audio format needs to be set in the code
 - joinchannel the channel name corresponding to the function can be modified by itself. Default: mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0);
 - Coding resolution frame rate, customized changes, opponents table end, it is not appropriate to set too large.  DEfault: mRtcEngine.setVideoProfile(160, 120, 10, 120);
 
