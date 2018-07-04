@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 
 import io.agora.openlive.R;
@@ -28,6 +31,7 @@ import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 
 public class VideoChatViewActivity extends AppCompatActivity {
+    private final static Logger log = LoggerFactory.getLogger(VideoChatViewActivity.class);
 
     private static final String LOG_TAG = VideoChatViewActivity.class.getSimpleName();
 
@@ -35,6 +39,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
+    public static final int PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE = PERMISSION_REQ_ID_RECORD_AUDIO + 2;
 
     private RtcEngine mRtcEngine;// Tutorial Step 1
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
@@ -64,7 +69,11 @@ public class VideoChatViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chat_view);
 
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO) && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)) {
+        System.out.println("sdk version :" + RtcEngine.getSdkVersion());
+
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)
+                && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE)) {
             initAgoraEngineAndJoinChannel();
         }
     }
@@ -78,7 +87,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
     }
 
     public boolean checkSelfPermission(String permission, int requestCode) {
-        Log.i(LOG_TAG, "checkSelfPermission " + permission + " " + requestCode);
+        log.info(LOG_TAG + "checkSelfPermission " + permission + " " + requestCode);
         if (ContextCompat.checkSelfPermission(this,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -94,7 +103,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.i(LOG_TAG, "onRequestPermissionsResult " + grantResults[0] + " " + requestCode);
+        log.info(LOG_TAG + "onRequestPermissionsResult " + grantResults[0] + " " + requestCode);
 
         switch (requestCode) {
             case PERMISSION_REQ_ID_RECORD_AUDIO: {
@@ -110,9 +119,17 @@ public class VideoChatViewActivity extends AppCompatActivity {
             case PERMISSION_REQ_ID_CAMERA: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initAgoraEngineAndJoinChannel();
+                    checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE);
                 } else {
                     showLongToast("No permission for " + Manifest.permission.CAMERA);
+                    finish();
+                }
+                break;
+            }
+            case PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
                     finish();
                 }
                 break;
@@ -169,7 +186,8 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
-        mRtcEngine.setLogFile(Environment.getExternalStorageDirectory()
+
+        mRtcEngine.setLogFile("/sdcard"
                 + File.separator + getPackageName() + "/log/agora-rtc.log");
 
         int REQUEST_CODE_CONTACT = 101;

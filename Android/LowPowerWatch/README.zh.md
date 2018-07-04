@@ -37,6 +37,20 @@ compile fileTree(dir: 'libs', include: ['*.jar'])
 - joinchannel 函数对应的频道名，可自行修改 。当前默认是：mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0);
 - 编码分辨率帧率，可定制化修改，对手表端来说，不宜设置太大。  当前默认是：mRtcEngine.setVideoProfile(160, 120, 10, 120);
 
+##IOT手表适配问题FAQ：
+1.Q：手表支持硬编还是软编？
+   A：手表定制的SDK是用硬编方式。
+2.Q：手表这边推荐的编码分辨率是多少？
+  A：推荐手表编码videoProfile 设置（160,120,10,120），建议手机端也同样设置
+3.Q：手表硬件要求
+  A：Android 4.4以上的系统，CPU 800M主频以上，内存 512M以上
+4.Q：手表SDK和标准SDK区别
+  A：手表SDK是定制的，做了很多功耗优化，专门为低功耗设备定制
+5.Q：手表SDK和demo哪里下载
+  A：手表SDK，需要联系我们的商务下载。demo：            https://github.com/AgoraIO/ARD-Agora-RTC-Low-Power/tree/master/Android
+6.Q：功耗情况如何
+  A：不同硬件设备会有不同，具体还需测试
+
 ## 运行环境
 - Android Studio 2.0 +
 - 真实 Android 设备 (Nexus 5X 或者其它设备)

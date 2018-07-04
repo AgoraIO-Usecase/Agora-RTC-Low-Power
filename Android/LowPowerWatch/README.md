@@ -37,6 +37,21 @@ Or use `Gradle` to build and run.
 - joinchannel the channel name corresponding to the function can be modified by itself. Default: mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0);
 - Coding resolution frame rate, customized changes, opponents table end, it is not appropriate to set too large.  DEfault: mRtcEngine.setVideoProfile(160, 120, 10, 120);
 
+
+##IOT watch compatibility problem FAQ:
+1.Q: do watches support hard or soft knitting?
+   A: the custom SDK of the watch is made by hard knitting.
+2.Q: what is the coding resolution recommended by the watch?
+   A: recommends the watch code videoProfile setting (160,120,10,120), suggesting that the mobile terminal is also set up.
+3.Q: watch hardware requirements
+   A:Android 4.4 above system, CPU 800M main frequency above, memory 512M above.
+4.Q: the difference between the watch SDK and the standard SDK
+   A: watch SDK is customized, and has done a lot of power optimization,                specifically for low-power equipment customization.
+5.Q: wristwatch SDK and demo where to download
+  A: watch SDK, we need to contact our business downloads. Demo:https://github.com/AgoraIO/ARD-Agora-RTC-Low-Power/tree/master/Android
+6.Q: how is the power consumption
+A: different hardware devices will be different, and specific tests are needed.
+
 ## Developer Environment Requirements
 - Android Studio 2.0 or above
 - Real devices (Nexus 5X or other devices)
