@@ -19,18 +19,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="Welcome to Open Live!"
+            android:text="Welcome to low power rtc sample app from Agora!"
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/room_name"
+            android:id="@+id/channel_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="40dp"
             android:gravity="center"
-            android:hint="Input name of the Live?"
+            android:hint="Input name of the Channel?"
             android:inputType="text" />
 
         <Button
@@ -40,6 +40,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:onClick="onClickJoin"
-            android:text="Join Room" />
+            android:enabled="false"
+            android:text="Join Channel" />
     </LinearLayout>
 </RelativeLayout>

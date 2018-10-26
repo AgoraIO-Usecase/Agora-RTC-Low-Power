@@ -1,4 +1,4 @@
-package io.agora.openlive.ui;
+package io.agora.ard.low_power.phone.ui;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import io.agora.openlive.R;
-import io.agora.openlive.model.ConstantApp;
+import io.agora.ard.low_power.phone.R;
+import io.agora.ard.low_power.phone.model.ConstantApp;
 
 public class SettingsActivity extends AppCompatActivity {
     private VideoProfileAdapter mVideoProfileAdapter;

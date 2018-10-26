@@ -1,4 +1,4 @@
-package io.agora.openlive.ui;
+package io.agora.ard.low_power.phone.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import io.agora.openlive.R;
-import io.agora.openlive.model.ConstantApp;
+import io.agora.ard.low_power.phone.R;
+import io.agora.ard.low_power.phone.model.ConstantApp;
 import io.agora.rtc.Constants;
 
 public class MainActivity extends BaseActivity {
@@ -21,14 +21,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
 
     @Override
     protected void initUIandEvent() {
-        EditText textRoomName = (EditText) findViewById(R.id.room_name);
-        textRoomName.addTextChangedListener(new TextWatcher() {
+        EditText textChannelName = (EditText) findViewById(R.id.channel_name);
+        textChannelName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -92,12 +91,12 @@ public class MainActivity extends BaseActivity {
     }
 
     public void forwardToLiveRoom(int cRole) {
-        final EditText v_room = (EditText) findViewById(R.id.room_name);
-        String room = v_room.getText().toString();
+        final EditText v_channel = (EditText) findViewById(R.id.channel_name);
+        String room = v_channel.getText().toString();
 
         Intent i = new Intent(MainActivity.this, LiveRoomActivity.class);
         i.putExtra(ConstantApp.ACTION_KEY_CROLE, cRole);
-        i.putExtra(ConstantApp.ACTION_KEY_ROOM_NAME, room);
+        i.putExtra(ConstantApp.ACTION_KEY_CHANNEL_NAME, room);
 
         startActivity(i);
     }

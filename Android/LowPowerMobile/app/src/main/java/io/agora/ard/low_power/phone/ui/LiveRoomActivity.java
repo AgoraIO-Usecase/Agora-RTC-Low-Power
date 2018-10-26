@@ -1,4 +1,4 @@
-package io.agora.openlive.ui;
+package io.agora.ard.low_power.phone.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,21 +10,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewStub;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-import io.agora.openlive.R;
-import io.agora.openlive.model.AGEventHandler;
-import io.agora.openlive.model.ConstantApp;
-
+import io.agora.ard.low_power.phone.R;
+import io.agora.ard.low_power.phone.model.AGEventHandler;
+import io.agora.ard.low_power.phone.model.ConstantApp;
 import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
@@ -33,9 +30,9 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
     private final static Logger log = LoggerFactory.getLogger(LiveRoomActivity.class);
 
-    private RelativeLayout mBigRelativeLayout;
+    private FrameLayout mRemoteVideoViewContainer;
 
-    private RelativeLayout mSmallVideoViewDock;
+    private FrameLayout mLocalVideoViewContainer;
 
     private final HashMap<Integer, SurfaceView> mUidsList = new HashMap<>(); // uid = 0 || uid == EngineConfig.mUid
 
@@ -43,7 +40,6 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_room);
-
     }
 
     @Override
@@ -75,13 +71,12 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
             throw new RuntimeException("Should not reach here");
         }
 
-        String roomName = i.getStringExtra(ConstantApp.ACTION_KEY_ROOM_NAME);
+        String channelName = i.getStringExtra(ConstantApp.ACTION_KEY_CHANNEL_NAME);
 
         doConfigEngine(cRole);
 
-        mBigRelativeLayout = (RelativeLayout) findViewById(R.id.big_video_relativelayout);
-        ViewStub stub = (ViewStub) findViewById(R.id.small_video_view_dock);
-        mSmallVideoViewDock = (RelativeLayout) stub.inflate();
+        mRemoteVideoViewContainer = (FrameLayout) findViewById(R.id.remote_video_view_container);
+        mLocalVideoViewContainer = (FrameLayout) findViewById(R.id.local_video_view_container);
 
         ImageView button1 = (ImageView) findViewById(R.id.btn_1);
         ImageView button2 = (ImageView) findViewById(R.id.btn_2);
@@ -92,20 +87,21 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
             rtcEngine().setupLocalVideo(new VideoCanvas(surfaceV, VideoCanvas.RENDER_MODE_HIDDEN, 0));
 
-            mUidsList.put(0, surfaceV); // get first surface view
+            mUidsList.put(0, surfaceV); // get first SurfaceView
 
-            mSmallVideoViewDock.addView(surfaceV);
+            surfaceV.setZOrderMediaOverlay(true);
+            surfaceV.setZOrderOnTop(true);
+            mLocalVideoViewContainer.addView(surfaceV);
             worker().preview(true, surfaceV, 0);
             broadcasterUI(button1, button2, button3);
-
         } else {
             audienceUI(button1, button2, button3);
         }
 
-        worker().joinChannel(roomName, config().mUid);
+        worker().joinChannel(channelName, config().mUid);
 
-        TextView textRoomName = (TextView) findViewById(R.id.room_name);
-        textRoomName.setText(roomName);
+        TextView textChannelName = (TextView) findViewById(R.id.channel_name);
+        textChannelName.setText(channelName);
     }
 
     private void broadcasterUI(ImageView button1, ImageView button2, ImageView button3) {
@@ -292,8 +288,7 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                 } else {
                     rtcEngine().setupRemoteVideo(new VideoCanvas(surfaceV, VideoCanvas.RENDER_MODE_HIDDEN, uid));
                 }
-                mBigRelativeLayout.addView(surfaceV);
-
+                mRemoteVideoViewContainer.addView(surfaceV);
             }
         });
     }
@@ -333,10 +328,9 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
 
     @Override
     public void onUserJoined(int uid, int elapsed) {
-
+        log.debug("onUserJoined " + (uid & 0xFFFFFFFFL) + " " + elapsed);
         doRenderRemoteUi(uid);
     }
-
 
     private void doRemoveRemoteUi(final int uid) {
         runOnUiThread(new Runnable() {
@@ -346,23 +340,21 @@ public class LiveRoomActivity extends BaseActivity implements AGEventHandler {
                     return;
                 }
                 mUidsList.remove(uid);
-                mBigRelativeLayout.removeAllViews();
-
+                mRemoteVideoViewContainer.removeAllViews();
             }
         });
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         rtcEngine().setupLocalVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-        if(mSmallVideoViewDock != null) {
-            mSmallVideoViewDock.removeAllViews();
-        }
-        if (mBigRelativeLayout != null) {
-            mBigRelativeLayout.removeAllViews();
-        }
 
+        if (mLocalVideoViewContainer != null) {
+            mLocalVideoViewContainer.removeAllViews();
+        }
+        if (mRemoteVideoViewContainer != null) {
+            mRemoteVideoViewContainer.removeAllViews();
+        }
     }
 }

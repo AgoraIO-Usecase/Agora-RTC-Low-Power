@@ -1,4 +1,4 @@
-package io.agora.openlive.model;
+package io.agora.ard.low_power.phone.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,11 +11,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.text.TextUtils;
+
 import io.agora.common.Constant;
-import io.agora.openlive.R;
+import io.agora.ard.low_power.phone.R;
 import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,7 +125,7 @@ public class WorkerThread extends Thread {
         }
 
         ensureRtcEngineReadyLock();
-        mRtcEngine.joinChannel(null, channel, "OpenLive", uid);
+        mRtcEngine.joinChannel(null, channel, "LowPowerMob", uid);
 
         mEngineConfig.mChannel = channel;
 
@@ -174,7 +176,7 @@ public class WorkerThread extends Thread {
         mRtcEngine.setParameters("{\"che.audio.specify.codec\":\"G722\"}");
 
 //      mRtcEngine.setVideoProfile(mEngineConfig.mVideoProfile, true);
-        mRtcEngine.setVideoProfile(160,120,15,120);//you can change it by yourself
+        mRtcEngine.setVideoProfile(160, 120, 15, 120);//you can change it by yourself
 
         mRtcEngine.setClientRole(cRole);
 

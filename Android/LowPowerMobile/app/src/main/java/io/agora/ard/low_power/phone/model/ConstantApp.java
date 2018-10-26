@@ -1,4 +1,4 @@
-package io.agora.openlive.model;
+package io.agora.ard.low_power.phone.model;
 
 import io.agora.rtc.Constants;
 
@@ -28,5 +28,5 @@ public class ConstantApp {
     }
 
     public static final String ACTION_KEY_CROLE = "C_Role";
-    public static final String ACTION_KEY_ROOM_NAME = "ecHANEL";
+    public static final String ACTION_KEY_CHANNEL_NAME = "ecHANEL";
 }

@@ -1,11 +1,11 @@
-package io.agora.openlive;
+package io.agora.ard.low_power.phone;
 
 import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import io.agora.openlive.model.WorkerThread;
+import io.agora.ard.low_power.phone.model.WorkerThread;
 
 public class AGApplication extends Application {
 

@@ -1,4 +1,4 @@
-package io.agora.openlive.model;
+package io.agora.ard.low_power.phone.model;
 
 import android.content.Context;
 
