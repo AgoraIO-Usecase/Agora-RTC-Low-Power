@@ -1,6 +1,6 @@
 # LowPowerMobile for Android
 
-*Read this in other languages: [English](README.en.md)*
+*Other languages: [English](README.en.md)*
 
 这个开源示例项目演示了手机如何快速集成 Agora 视频 SDK，实现多人视频连麦直播。
 

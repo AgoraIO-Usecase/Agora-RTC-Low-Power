@@ -1,6 +1,6 @@
 # 智能设备低功耗：从方案到集成
 
-Other Language: [English](README.md)
+其他语言版本：[English](README.md)
 
 Agora 为智能设备提供低功耗解决方案，包含:
 

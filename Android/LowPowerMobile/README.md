@@ -1,6 +1,6 @@
 # LowPowerMobile for Android
 
-*其他语言版本： [简体中文](README.zh.md)*
+*其他语言版本：[简体中文](README.zh.md)*
 
 The OpenLive for Android Sample App is an open-source demo that will help you get live video broadcasting integrated for Moible directly into your Android applications using the Agora Video SDK.
 
