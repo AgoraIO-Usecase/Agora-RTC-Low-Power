@@ -1,4 +1,4 @@
-package io.agora.openlive.ui;
+package io.agora.ard.low_power.watch;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-import io.agora.openlive.R;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -41,7 +40,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
     public static final int PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE = PERMISSION_REQ_ID_RECORD_AUDIO + 2;
 
-    private RtcEngine mRtcEngine;// Tutorial Step 1
+    private RtcEngine mRtcEngine; // Tutorial Step 1
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) { // Tutorial Step 5
@@ -68,8 +67,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chat_view);
-
-        System.out.println("sdk version :" + RtcEngine.getSdkVersion());
 
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)
                 && checkSelfPermission(Manifest.permission.CAMERA, PERMISSION_REQ_ID_CAMERA)
@@ -192,7 +189,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
         int REQUEST_CODE_CONTACT = 101;
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        //check permissions
+        // check permissions
         for (String str : permissions) {
             if (checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(permissions, REQUEST_CODE_CONTACT);
@@ -203,7 +200,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 
         mRtcEngine.setParameters("{\"che.audio.specify.codec\":\"G722\"}");
-
     }
 
     // Tutorial Step 2
@@ -211,9 +207,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRtcEngine.enableVideo();
         // you can change it by yourself
         mRtcEngine.setVideoProfile(160, 120, 10, 120);
-
     }
-
 
     // Tutorial Step 3
     private void setupLocalVideo() {
@@ -221,18 +215,17 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
         surfaceView.setZOrderMediaOverlay(true);
+        surfaceView.setZOrderOnTop(true);
         container.addView(surfaceView);
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_ADAPTIVE, 0));
-
     }
 
     // Tutorial Step 4
     private void joinChannel() {
         mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-        //you can change channelname by yourself
-        mRtcEngine.joinChannel(null, "yourchannel", "Extra Optional Data", 0); // if you do not specify the uid, we will generate the uid for you
+        // you can change channel name by yourself
+        mRtcEngine.joinChannel(null, "testlewatch", "LowPower Watch", 0); // if you do not specify the uid, we will generate the uid for you
     }
-
 
     // Tutorial Step 5
     private void setupRemoteVideo(int uid) {
@@ -258,13 +251,10 @@ public class VideoChatViewActivity extends AppCompatActivity {
     private void onRemoteUserLeft() {
         RelativeLayout container = (RelativeLayout) findViewById(R.id.remote_video_view_container);
         container.removeAllViews();
-
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
-
-
 }

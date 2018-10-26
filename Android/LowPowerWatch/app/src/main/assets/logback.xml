@@ -2,7 +2,7 @@
     <!-- config THESE PROPERTIES in code for more flexibility -->
     <property
         name="LOG_DIR"
-        value="/sdcard/io.agora.openlive/log" />
+        value="/sdcard/io.agora.ard.low_power.watch/log" />
     <property
         name="FILE_PREFIX"
         value="app" />
