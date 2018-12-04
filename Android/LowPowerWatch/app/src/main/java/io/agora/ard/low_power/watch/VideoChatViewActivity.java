@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +26,13 @@ import java.io.File;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.mediaio.AgoraTextureCamera;
+import io.agora.rtc.mediaio.AgoraTextureView;
+import io.agora.rtc.mediaio.IVideoSource;
 import io.agora.rtc.video.VideoCanvas;
+
+import static io.agora.rtc.mediaio.MediaIO.BufferType.TEXTURE;
+import static io.agora.rtc.mediaio.MediaIO.PixelFormat.TEXTURE_OES;
 
 public class VideoChatViewActivity extends AppCompatActivity {
     private final static Logger log = LoggerFactory.getLogger(VideoChatViewActivity.class);
@@ -35,6 +40,11 @@ public class VideoChatViewActivity extends AppCompatActivity {
     private static final String LOG_TAG = VideoChatViewActivity.class.getSimpleName();
 
     private static final boolean DBG = false;
+
+    private static final boolean APPLY_MEDIA_IO = true;
+
+    private AgoraTextureView mLocalTextureView;
+    private IVideoSource mVideoSource;
 
     private static final int PERMISSION_REQ_ID_RECORD_AUDIO = 22;
     private static final int PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1;
@@ -84,7 +94,12 @@ public class VideoChatViewActivity extends AppCompatActivity {
     }
 
     public boolean checkSelfPermission(String permission, int requestCode) {
-        log.info(LOG_TAG + "checkSelfPermission " + permission + " " + requestCode);
+        log.info(LOG_TAG + "checkSelfPermission " + permission + " " + requestCode + " API: Level " + Build.VERSION.SDK_INT);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
         if (ContextCompat.checkSelfPermission(this,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -187,16 +202,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRtcEngine.setLogFile("/sdcard"
                 + File.separator + getPackageName() + "/log/agora-rtc.log");
 
-        int REQUEST_CODE_CONTACT = 101;
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        // check permissions
-        for (String str : permissions) {
-            if (checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(permissions, REQUEST_CODE_CONTACT);
-                return;
-            }
-        }
-
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 
         mRtcEngine.setParameters("{\"che.audio.specify.codec\":\"G722\"}");
@@ -205,25 +210,39 @@ public class VideoChatViewActivity extends AppCompatActivity {
     // Tutorial Step 2
     private void setupVideoProfile() {
         mRtcEngine.enableVideo();
-        // you can change it by yourself
-        mRtcEngine.setVideoProfile(160, 120, 10, 120);
+        // Change it according to your device/scenario
+        mRtcEngine.setVideoProfile(120, 160, 10, 120); // or (240, 320, 10, 300)
     }
 
     // Tutorial Step 3
     private void setupLocalVideo() {
         RelativeLayout container = (RelativeLayout) findViewById(R.id.local_video_view_container);
 
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        surfaceView.setZOrderMediaOverlay(true);
-        surfaceView.setZOrderOnTop(true);
-        container.addView(surfaceView);
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_ADAPTIVE, 0));
+        if (!APPLY_MEDIA_IO) {
+            SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+            surfaceView.setZOrderMediaOverlay(true);
+            surfaceView.setZOrderOnTop(true);
+            container.addView(surfaceView);
+            mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_ADAPTIVE, 0));
+        } else {
+            mLocalTextureView = new AgoraTextureView(this);
+
+            mVideoSource = new AgoraTextureCamera(this, 480, 360);
+
+            (mLocalTextureView).init(((AgoraTextureCamera) mVideoSource).getEglContext());
+            (mLocalTextureView).setBufferType(TEXTURE);
+            (mLocalTextureView).setPixelFormat(TEXTURE_OES);
+
+            container.addView(mLocalTextureView);
+            mRtcEngine.setVideoSource(mVideoSource);
+            mRtcEngine.setLocalVideoRenderer(mLocalTextureView);
+        }
     }
 
     // Tutorial Step 4
     private void joinChannel() {
         mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-        // you can change channel name by yourself
+        // Specify the uid and channel
         mRtcEngine.joinChannel(null, "testlewatch", "LowPower Watch", 0); // if you do not specify the uid, we will generate the uid for you
     }
 
