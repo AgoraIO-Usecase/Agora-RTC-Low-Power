@@ -162,6 +162,20 @@ public class VideoChatViewActivity extends AppCompatActivity {
     protected void onDestroy() {
 
         leaveChannel();
+
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.local_video_view_container);
+        container.removeAllViews();
+
+        if (mLocalTextureView != null) {
+            mLocalTextureView.init(null);
+            mLocalTextureView = null;
+        }
+
+        if (mVideoSource != null) {
+            ((AgoraTextureCamera) mVideoSource).release();
+            mVideoSource = null;
+        }
+
         RtcEngine.destroy();
 
         super.onDestroy();
@@ -227,7 +241,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
         } else {
             mLocalTextureView = new AgoraTextureView(this);
 
-            mVideoSource = new AgoraTextureCamera(this, 480, 360);
+            mVideoSource = new AgoraTextureCamera(getApplicationContext(), 480, 360);
 
             (mLocalTextureView).init(((AgoraTextureCamera) mVideoSource).getEglContext());
             (mLocalTextureView).setBufferType(TEXTURE);
